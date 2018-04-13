@@ -1,10 +1,33 @@
-#Section Six Labs 
-#Sergiy Zarubin
-#Danny Tran
-#Lacey Sikes
-#Derek Bowdle
-#LAB 12
+
 import random
+import os
+
+
+
+#IMPORTING SOUND
+dir_path = os.path.dirname(os.path.realpath(__file__)) #get path of where AdventureGame is at
+#print dir_path
+sound_path = dir_path+"/sound/"
+print sound_path
+#os.chdir(sound_path) #Cannot seem to change Path
+print(os.getcwd())
+
+def directoryPath(name):
+  returnPath = sound_path
+
+def soundPath(name):
+  returnPath = "'"+sound_path+name+"/'"
+  return returnPath
+
+checkname = soundPath("slap.wav")
+print checkname
+
+slapPath = soundPath("slap.wav")
+print slapPath
+print slapPath
+#slapSound = makeSound(slapPath)
+
+#play(slapPath)
 #
 #CLASS GAME ITEMS
 #
@@ -723,7 +746,7 @@ class player:
 WELCOME = """
 ===================================================================================
 |                               Welcome %s
-                              Sectioin Six Labs                                  
+                              Section Six Labs                                  
 |                                 Presents                                        
 |                          "Escape from Temple of Terror!"                        
 |             In each room you will be told which directions you can go           
@@ -835,4 +858,5 @@ def action_adder(action_dict, hotkey,action, name):
     printNow(hotkey+": "+name)
 
 
-play()
+#play()
+
