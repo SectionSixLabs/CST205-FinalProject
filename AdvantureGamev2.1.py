@@ -30,7 +30,7 @@ deathSound = makeSound(dirPath+'/sounds/death.wav')
 #play(deathSound)
 
 earthquakeSound = makeSound(dirPath+'/sounds/earthquake.wav')
-#play(earthquakeSound)
+play(earthquakeSound)
 
 encounterSound = makeSound(dirPath+'/sounds/encounter.wav')
 #play(encounterSound)
@@ -60,7 +60,7 @@ stungSound = makeSound(dirPath+'/sounds/stung.wav')
 #play(stungSound)
 
 windSound = makeSound(dirPath+'/sounds/wind.wav')
-play(windSound)
+#play(windSound)
 
 
 #
@@ -212,7 +212,8 @@ class world(object):
     class VictoryTile(MapTile):
         def modify_player(self, player):
             player.victory = True
-
+            play(windSound)
+            
         def intro_text(self):
             return """
             You see a bright light in the distance...
