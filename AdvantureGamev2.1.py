@@ -1,33 +1,68 @@
+#Section Six Labs 
+#Sergiy Zarubin
+#Danny Tran
+#Lacey Sikes
+#Derek Bowdle
+
+#Final Project
 
 import random
 import os
 
-
-
 #IMPORTING SOUND
-dir_path = os.path.dirname(os.path.realpath(__file__)) #get path of where AdventureGame is at
-#print dir_path
-sound_path = dir_path+"/sound/"
-print sound_path
-#os.chdir(sound_path) #Cannot seem to change Path
-print(os.getcwd())
+#dir_path = os.path.dirname(os.path.realpath(__file__)) #get path of where AdventureGame is at
+#print(os.path.basename(os.getcwd()))
+#data_folder = os.path.join()
 
-def directoryPath(name):
-  returnPath = sound_path
+#Note###
+#Technically this code will still work on Windows because Python has a hack where it will recognize either kind of slash when you call open() on Windows. 
+#So coding the paths with / slashes
+#Will need to do a windows check at the end!#
 
-def soundPath(name):
-  returnPath = "'"+sound_path+name+"/'"
-  return returnPath
 
-checkname = soundPath("slap.wav")
-print checkname
+#Start Sound Import
+dirPath = os.path.dirname(__file__)
 
-slapPath = soundPath("slap.wav")
-print slapPath
-print slapPath
-#slapSound = makeSound(slapPath)
+approachSound = makeSound(dirPath+'/sounds/approach.wav')
+#play(approachSound)
 
-#play(slapPath)
+deathSound = makeSound(dirPath+'/sounds/death.wav')
+#play(deathSound)
+
+earthquakeSound = makeSound(dirPath+'/sounds/earthquake.wav')
+#play(earthquakeSound)
+
+encounterSound = makeSound(dirPath+'/sounds/encounter.wav')
+#play(encounterSound)
+
+gunSound = makeSound(dirPath+'/sounds/gun.wav')
+#play(slapSound)
+
+injuredSound = makeSound(dirPath+'/sounds/injured.wav')
+#play(injuredSound)
+
+lootSound = makeSound(dirPath+'/sounds/loot.wav')
+#play(lootSound)
+
+slapSound = makeSound(dirPath+'/sounds/slap.wav')
+#play(slapSound)
+
+slashSound = makeSound(dirPath+'/sounds/slash.wav')
+#play(slashSound)
+
+smackSound = makeSound(dirPath+'/sounds/smack.wav')
+#play(smackSound)
+
+spearSound = makeSound(dirPath+'/sounds/spear.wav')
+#play(spearSound)
+
+stungSound = makeSound(dirPath+'/sounds/stung.wav')
+#play(stungSound)
+
+windSound = makeSound(dirPath+'/sounds/wind.wav')
+play(windSound)
+
+
 #
 #CLASS GAME ITEMS
 #
@@ -761,7 +796,7 @@ WELCOME = """
 #from collections import OrderedDict
 
 
-def play():
+def playgame():
     w=world()
     w.parse_world_locations()
     p = player.Player()
@@ -858,5 +893,5 @@ def action_adder(action_dict, hotkey,action, name):
     printNow(hotkey+": "+name)
 
 
-#play()
+#playgame()
 
