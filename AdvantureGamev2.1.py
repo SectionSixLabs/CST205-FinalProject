@@ -796,7 +796,7 @@ WELCOME = """
 #from collections import OrderedDict
 
 
-def playgame():
+def playgame(): #changed name to playgame due to conficts with sound play()
     w=world()
     w.parse_world_locations()
     p = player.Player()
@@ -826,6 +826,7 @@ def choose_action(w,room, player):
         
         if action and action_input:
           if action =="loot":
+            play(lootSound)
             player.loot(w) 
           elif action =="attack":
             player.attack(w)
@@ -851,6 +852,7 @@ def get_available_actions(w,room, player):
             action_adder(actions, 'l', "loot", "(L)oot")
     if isinstance(room, world.EnemyTile) and room.enemy.is_alive():
         action_adder(actions, 'a', "attack", "(A)ttack")
+        play(stungSound)
     if isinstance(room, world.ChestTile):
         action_adder(actions, 'c', "check", "(C)heck")
     if isinstance(room, world.BossTile) and room.enemy.is_alive():
@@ -893,5 +895,5 @@ def action_adder(action_dict, hotkey,action, name):
     printNow(hotkey+": "+name)
 
 
-#playgame()
+playgame()
 
