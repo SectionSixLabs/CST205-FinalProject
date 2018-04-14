@@ -79,6 +79,7 @@ class gameItems:
             self.name = "Spear"
             self.description = "A razor tipped pole arm. The shaft is wooden, and the tip is worked steel " 
             self.damage = 10
+            self.sound = smackSound
 
     class pistol223(Weapon):
         def __init__(self):
@@ -86,6 +87,8 @@ class gameItems:
             self.description = "A .223 rifle modified and cut down to a pistol. This is a one-of-a-kind firearm, obviously made with love and skill." 
             self.damage = 50
             self.rounds = 5
+            self.sound = gunSound
+            
     class pistol223Empty(Weapon):
         def __init__(self):
             self.name = "Empty .223 pistol"
@@ -732,7 +735,7 @@ class player:
             enemy = room.enemy
             
             printNow("You use %s against %s!"%(best_weapon.name,enemy.name))
-            
+            play(best_weapon.sound)
             enemy.hp -= best_weapon.damage
             
             if isinstance(best_weapon, gameItems.Explosives):
@@ -810,6 +813,7 @@ def playgame(): #changed name to playgame due to conficts with sound play()
             choose_action(w,room, p)
         elif not p.is_alive():
             showInformation("Your journey has come to an early end %s!" % p.name)
+            play(deathSound)
 
 
 def choose_action(w,room, player):
@@ -857,8 +861,10 @@ def get_available_actions(w,room, player):
         action_adder(actions, 'c', "check", "(C)heck")
     if isinstance(room, world.BossTile) and room.enemy.is_alive():
         action_adder(actions, 'a', "attack", "(A)ttack")
+        play(spearSound)
     if isinstance(room, world.DoorTile) and room.enemy.is_alive():
         action_adder(actions, 'a', "attack", "(A)ttack")
+        play(slapSound)
         if room.door_opened ==False:
            action_adder(actions, 'p', "lockpic", "(P)ick a lock")
     else:
