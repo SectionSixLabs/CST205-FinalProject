@@ -30,7 +30,7 @@ deathSound = makeSound(dirPath+'/sounds/death.wav')
 #play(deathSound)
 
 earthquakeSound = makeSound(dirPath+'/sounds/earthquake.wav')
-play(earthquakeSound)
+#play(earthquakeSound)
 
 encounterSound = makeSound(dirPath+'/sounds/encounter.wav')
 #play(encounterSound)
@@ -61,6 +61,11 @@ stungSound = makeSound(dirPath+'/sounds/stung.wav')
 
 windSound = makeSound(dirPath+'/sounds/wind.wav')
 #play(windSound)
+
+startSound = makeSound(dirPath+'/sounds/start.wav')
+play(startSound)
+
+#Keep play(startSound) uncommented for startup sound at beginning of game
 
 
 #
