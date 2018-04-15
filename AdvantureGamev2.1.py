@@ -99,12 +99,14 @@ class gameItems:
             self.name = "Empty .223 pistol"
             self.description = "A .223 rifle modified and cut down to a pistol. This is a one-of-a-kind firearm, obviously made with love and skill. No rounds Left" 
             self.damage = 5
+            self.sound = smackSound
 
     class Explosives(Weapon):
         def __init__(self):
             self.name = "Explosives"
             self.description = "A chunk of Cordex, a military brand of plastic explosives. Highly stable, very destructive. Includes a timer." 
             self.damage = 1000
+            self.sound = earthquakeSound
        
     class Consumable:
         def __init__(self):
@@ -260,22 +262,12 @@ class world(object):
             r = random.random()
             if r < 0.80:
                 self.enemy = enemies.GiantAnt()
-                self.alive_text ="""
-                                 A giant ant speeds toward you 
-                                 it's pincers snap at you! """
-                self.dead_text = """
-                                 The corpse of the dead ant 
-                                 disolves on the ground. You sing,
-                                 'Dead Ant, Dead Ant, Tad-Da-Da-Da'"""
+                self.alive_text ="A giant %s speeds toward you it's pincers snap at you! "%(self.enemy.name)
+                self.dead_text = "The corpse of the dead %s disolves on the ground. n/You sing,'Dead Ant, Dead Ant, Tad-Da-Da-Da'"%(self.enemy.name)
             else: 
                 self.enemy = enemies.RadScorpion()
-                self.alive_text = """
-                                 A giant Scorpion crawls toward you 
-                                 it's stinger lashes at you!"""
-                self.dead_text = """
-                                 The corpse of the dead scorpion 
-                                 dissolves on the ground. You Exclaim, 
-                                 'Whisky Tango Foxtrot was that thing?'"""
+                self.alive_text = "A giant %s crawls toward you it's stinger lashes at you!"%(self.enemy.name)
+                self.dead_text = " The corpse of the dead %s dissolves on the ground. n/You Exclaim, 'Whisky Tango Foxtrot was that thing?'"%(self.enemy.name)
 
             super(world.EnemyTile,self).__init__(x, y)
         def intro_text(self):
@@ -322,13 +314,8 @@ class world(object):
     class BossTile(MapTile):
         def __init__(self, x, y):
            self.enemy = enemies.Cameron()
-           self.alive_text = """
-                      A man yells at you:            
-                      My Name is %s!!!
-                      "You Shell Not Pass" and lunges at you!
-                      """ % (self.enemy.name)
-           self.dead_text = """
-                      The corpse of %s man dissolves on the ground.""" %(self.enemy.name)
+           self.alive_text = "A man yells at you:/nMy Name is %s!!!'You Shell Not Pass' and lunges at you!" % (self.enemy.name)
+           self.dead_text = "The corpse of %s man dissolves on the ground." %(self.enemy.name)
 
            super(world.BossTile,self).__init__(x,y)
         def intro_text(self):
@@ -350,14 +337,8 @@ class world(object):
            self.enemy = enemies.Centaur()
            self.item_claimed = False
            self.item = gameItems.Book()
-           self.alive_text = """
-                      Statue of the Colosus Comes to life
-                      "Only who without hate should pass"
-                      """
-           self.dead_text = """
-                      You stroll around the statue of Colosus
-                      It reminds you of John Cena for some reason 
-                            """
+           self.alive_text = "Statue of the Colosus Comes to life 'Only who without hate should pass'"
+           self.dead_text = "You stroll around the statue of Colosus. It reminds you of John Cena for some reason"
 
            super(world.SecretTile,self).__init__(x,y)
        
@@ -387,9 +368,7 @@ class world(object):
     
     class TrapTile(MapTile):
         def __init__(self, x, y):
-           self.alive_text = """
-                             You notice some strange patterns on the floor, but you barge in anyway
-                             """
+           self.alive_text = "You notice some strange patterns on the floor, but you barge in anyway"
            super(world.TrapTile,self).__init__(x, y)
 
     
@@ -422,9 +401,7 @@ class world(object):
 
         def intro_text(self):
             if self.item_claimed:
-                return """
-                Another unremarkable part of the temple. You must forge onwards.
-                """
+                return "Another unremarkable part of the temple. You must forge onwards."
             else:
                 return "Someone dropped some %s" % (self.item.name)
 
@@ -433,75 +410,26 @@ class world(object):
                 self.item_claimed = True
                 item = self.item
                 player.inventory.append(item)
-                showInformation("%s added to your inventory." % (item.name))
+                printNow("%s added to your inventory." % (item.name))
     
                 
     class PassageTile(MapTile):
         def intro_text(self):
-            roomDesc = ["""
-            You are in a dark, musty temple. 
-            The shadows seem to play tricks with your eyes, 
-            and you can hear the faint sound of movement.
-            ""","""
-            You see a coridor draped in darkness in front of you
-            What does this darkness hold for you? 
-            ""","""
-            You see scattered pieces of ceiling on the floor. 
-            Watch your steps.
-            ""","""
-            You can see a body lying on the floor, you get closer. 
-            Name tag reads "Parzeval" 
-            You find the bloody message close to the corps. 
-            BeWare they are working for IOI,  they are sixers!
-            Don't trust them!
-            ""","""
-            You start seeing strang glowing symbols in the dark. 
-            Suddenly you realize what they are saying: 
-            Peace of Eden belongs to us!
-            ""","""
-            On the walls you can read the big sign: 
-            "Save Cheer Leader - Save the World"
-            ""","""
-            A crack in the ceiling above the middle of the north wall 
-            allows a trickle of water to flow down to the floor. 
-            The water pools near the base of the wall, 
-            and a rivulet runs along the wall an out into the hall. 
-            The water smells fresh.
-            ""","""
-            A large, arched niche pierces one wall of this chamber. 
-            Filled with rotting wood and rubble the niche appears 
-            to be a dumping ground of sorts. Elsewhere in the room, 
-            several sections of floor are cracked and pitted.
-            """, """
-            This irregularly-shaped room has an uneven floor. 
-            Several small puddles have gathered in the deeper depressions. 
-            Elsewhere, small pieces of rubble litter the floor.
-            ""","""
-            The arched ceiling of this chamber rises to a height of 20 ft. 
-            In the center of the room, but is barely man-high where it meets the walls.
-            The arches holding the ceiling aloft are carved to represent writhing tentacles;
-            a few have been defaced but the upper portions of all remain untouched.
-            ""","""
-            A pile of rotting wood, rubbish and other detritus partially obscures one wall of this chamber.
-            Clearly used as a rubbish dump, the stench of decay and rot hangs heavily in the air
-            ""","""
-            This large chamber was the scene of an ancient battle. 
-            Skeletal remains of at least a dozen humanoids lie scattered about the room where they fell. 
-            Several rusting broken spears and shattered, rotting shields lie among the fallen.
-            ""","""
-            Part of one wall of this room has collapsed, revealing the natural rock behind the dressed stone wall. 
-            The rubble has been moved to create a breastwork across one of the room's exits. 
-            Splatters of old, dried blood decorate the top of the breastwork.
-            ""","""
-            The remains of a cold camp are evident here. 
-            A tattered cloak-the size meant for a gnome or halfling?-along with two empty wineskins and the stripped bones
-            of a chicken and crusts of mouldy bread bear testimony to an explorer's rest.
-            ""","""
-            A gaping open pit in one of this chamber's doorways blocks access to the area beyond. 
-            Two skeletons, pierced by dozens of tiny stone spikes, lie in the pit. 
-            The chamber beyond boasts a stone plinth and altar set in a semi-circular niche. 
-            The chamber's other doorway-twice the width of the trapped one appears unprotected.
-            """]
+            roomDesc = ["You are in a dark, musty temple. The shadows seem to play tricks with your eyes, and you can hear the faint sound of movement.",\
+            "You see a coridor draped in darkness in front of you. What does this darkness hold for you?",\
+            "You see scattered pieces of ceiling on the floor.Watch your steps.",\
+            "You can see a body lying on the floor, you get closer.Name tag reads 'Parzeval'. You find the bloody message close to the corps.BeWare they are working for IOI, they are sixers! Don't trust them!",\
+            "You start seeing strang glowing symbols in the dark. Suddenly you realize what they are saying:Peace of Eden belongs to us!",\
+            "On the walls you can read the big sign:'Save Cheer Leader - Save the World'",\
+            "A crack in the ceiling above the middle of the north wall allows a trickle of water to flow down to the floor.The water pools near the base of the wall, and a rivulet runs along the wall an out into the hall. The water smells fresh.",\
+            "A large, arched niche pierces one wall of this chamber. Filled with rotting wood and rubble the niche appears to be a dumping ground of sorts. Elsewhere in the room, several sections of floor are cracked and pitted.",\
+            "This irregularly-shaped room has an uneven floor. Several small puddles have gathered in the deeper depressions. Elsewhere, small pieces of rubble litter the floor.",\
+            "The arched ceiling of this chamber rises to a height of 20 ft. In the center of the room, but is barely man-high where it meets the walls. The arches holding the ceiling aloft are carved to represent writhing tentacles; a few have been defaced but the upper portions of all remain untouched.",\
+            "A pile of rotting wood, rubbish and other detritus partially obscures one wall of this chamber.Clearly used as a rubbish dump, the stench of decay and rot hangs heavily in the air",\
+            "This large chamber was the scene of an ancient battle. Skeletal remains of at least a dozen humanoids lie scattered about the room where they fell. Several rusting broken spears and shattered, rotting shields lie among the fallen.",\
+            "Part of one wall of this room has collapsed, revealing the natural rock behind the dressed stone wall. The rubble has been moved to create a breastwork across one of the room's exits. Splatters of old, dried blood decorate the top of the breastwork.",\
+            "The remains of a cold camp are evident here. A tattered cloak-the size meant for a gnome or halfling?-along with two empty wineskins and the stripped bones of a chicken and crusts of mouldy bread bear testimony to an explorer's rest.",\
+            "A gaping open pit in one of this chamber's doorways blocks access to the area beyond. Two skeletons, pierced by dozens of tiny stone spikes, lie in the pit.The chamber beyond boasts a stone plinth and altar set in a semi-circular niche. The chamber's other doorway-twice the width of the trapped one appears unprotected."]
         
             #print (self.x, self.y)
             roomDesc= random.choice(roomDesc)
@@ -757,7 +685,7 @@ class player:
                   self.inventory.append(gameItems.pistol223Empty())
             
             if not enemy.is_alive():
-                showInformation("You killed %s!"%(enemy.name))
+                printNow("You killed %s!"%(enemy.name))
                 w.world_map[room.y][room.x]=w.EnemyLootTile(room.x,room.y,enemy.name)
             
             else:
@@ -790,7 +718,7 @@ class player:
 WELCOME = """
 ===================================================================================
 |                               Welcome %s
-                              Section Six Labs                                  
+|                              Section Six Labs                                  
 |                                 Presents                                        
 |                          "Escape from Temple of Terror!"                        
 |             In each room you will be told which directions you can go           
