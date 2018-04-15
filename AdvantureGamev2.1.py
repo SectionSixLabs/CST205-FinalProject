@@ -6,6 +6,8 @@
 
 #Final Project
 
+#PLEASE USE JES VERION 5 OR LATER
+
 import random
 import os
 
@@ -66,7 +68,19 @@ startSound = makeSound(dirPath+'/sounds/start.wav')
 play(startSound)
 
 #Keep play(startSound) uncommented for startup sound at beginning of game
-
+DISCLAIMER = """
+===================================================================================
+|                          README
+|                    CST 205 FINAL PROJECT
+|                            BY
+|                    SECTION SIX LABS
+|              PLEASE USE JES VERSION 5 OR LATER
+|              FOR FULL GAME FEATURE INTEGRATION
+| 
+===================================================================================
+"""
+#Disclaimer before Game 
+showInformation(DISCLAIMER)
 
 #
 #CLASS GAME ITEMS
@@ -758,6 +772,7 @@ def choose_action(w,room, player):
         if action_input is None:
             return
         elif action_input.find("/quit")==0 or action_input.find("/q")==0 or action_input.find("/Q")==0 or action_input.find("quit")==0:
+          play(deathSound)
           action=player.senpokku
         else:
           action = available_actions.get(action_input)
