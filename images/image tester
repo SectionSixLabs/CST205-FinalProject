@@ -1,0 +1,36 @@
+import os
+dirPath = os.path.dirname(__file__)
+
+#pic1 is the background pic2 is the object
+def pasteItem(pic1,pic2):
+  backW = getWidth(pic1)
+  backH = getHeight(pic1)
+  w = getWidth(pic2)
+  h = getHeight(pic2)
+  startPixelX = backW/2-w/2
+  startPixelY = backH-h
+  
+  for x in  range(w):
+    for y in range(h):
+      p2 = getPixelAt(pic2,x,y)
+      r = getRed(p2)
+      g = getGreen(p2)
+      b = getGreen(p2)
+      if (r>5 and g<250 and b>5):
+        p1 = getPixelAt(pic1,startPixelX+x,startPixelY+y)
+        setColor(p1,makeColor(r,g,b))
+  explore(pic1)
+
+scorpion = makePicture(dirPath+'/radscorpion.png')
+ant = makePicture(dirPath+'/giantAnt.png')
+centaur = makePicture(dirPath+'/centaur.png')
+chest = makePicture(dirPath+'/chest.png')
+cameron = makePicture(dirPath+'/cameron.png')
+
+inside = makePicture(dirPath+'/templeInside.jpg')
+darkRoom = makePicture(dirPath+'/darkRoom.jpg')
+entrance = makePicture(dirPath+'/templeEntrance.jpg')
+door = makePicture(dirPath+'/templeDoor.jpg')
+
+#explore(cameron)
+pasteItem(inside,centaur)

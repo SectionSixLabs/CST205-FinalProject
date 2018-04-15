@@ -6,8 +6,6 @@
 
 #Final Project
 
-#PLEASE USE JES VERION 5 OR LATER
-
 import random
 import os
 
@@ -68,19 +66,51 @@ startSound = makeSound(dirPath+'/sounds/start.wav')
 play(startSound)
 
 #Keep play(startSound) uncommented for startup sound at beginning of game
-DISCLAIMER = """
-===================================================================================
-|                          README
-|                    CST 205 FINAL PROJECT
-|                            BY
-|                    SECTION SIX LABS
-|              PLEASE USE JES VERSION 5 OR LATER
-|              FOR FULL GAME FEATURE INTEGRATION
-| 
-===================================================================================
-"""
-#Disclaimer before Game 
-showInformation(DISCLAIMER)
+
+#Start Image Import
+Blue = makePicture(dirPath+'/images/blue.jpg')
+
+#image manipulation function
+def pasteItem(pic1,pic2):
+  backW = getWidth(pic1)
+  backH = getHeight(pic1)
+  w = getWidth(pic2)
+  h = getHeight(pic2)
+  startPixelX = backW/2-w/2
+  startPixelY = backH-h
+  new = makeEmptyPicture(backW,backH)
+  
+  for x in  range(backW):
+    for y in range(backH):
+      p1 = getPixelAt(pic1,x,y)
+      pNew = getPixelAt(new,x,y)
+      if x>startPixelX and x<startPixelX+w and y>startPixelY and y<startPixelY+h: 
+        p2 = getPixelAt(pic2,x-startPixelX,y-startPixelY)
+        r = getRed(p2)
+        g = getGreen(p2)
+        b = getGreen(p2)
+        if (r>5 and g<250 and b>5):
+          setColor(pNew,getColor(p2))
+        else:
+          setColor(pNew,getColor(p1))
+      else:
+        setColor(pNew,getColor(p1))
+  return(new)
+
+#object images
+scorpion = makePicture(dirPath+'/images/radscorpion.png')
+ant = makePicture(dirPath+'/images/giantAnt.png')
+centaur = makePicture(dirPath+'/images/centaur.png')
+chest = makePicture(dirPath+'/images/chest.png')
+cameron = makePicture(dirPath+'/images/cameron.png')
+#background images
+inside = makePicture(dirPath+'/images/templeInside.jpg')
+darkRoom = makePicture(dirPath+'/images/darkRoom.jpg')
+entrance = makePicture(dirPath+'/images/templeEntrance.jpg')
+door = makePicture(dirPath+'/images/templeDoor.jpg')
+#composit images
+insideAnt = pasteItem(inside,ant)
+insideScorpion = pasteItem(inside,scorpion)
 
 #
 #CLASS GAME ITEMS
@@ -113,14 +143,12 @@ class gameItems:
             self.name = "Empty .223 pistol"
             self.description = "A .223 rifle modified and cut down to a pistol. This is a one-of-a-kind firearm, obviously made with love and skill. No rounds Left" 
             self.damage = 5
-            self.sound = smackSound
 
     class Explosives(Weapon):
         def __init__(self):
             self.name = "Explosives"
             self.description = "A chunk of Cordex, a military brand of plastic explosives. Highly stable, very destructive. Includes a timer." 
             self.damage = 1000
-            self.sound = earthquakeSound
        
     class Consumable:
         def __init__(self):
@@ -219,7 +247,10 @@ class world(object):
 
         def intro_text(self):
             raise NotImplementedError("Create a subclass instead!")
-
+        
+        def view(self):
+            return Blue
+        
         def modify_player(self, player):
             pass
 
@@ -230,11 +261,17 @@ class world(object):
             You look around and find that only path you have is to go inside,
             as other paths are blocked by the palisade and sharpened stakes.   
             """
+        def view(self):
+            return entrance
+            
     class VictoryTile(MapTile):
         def modify_player(self, player):
             player.victory = True
             play(windSound)
-            
+        
+        def view(self):
+          return jumpsuit
+                
         def intro_text(self):
             return """
             You see a bright light in the distance...
@@ -244,7 +281,7 @@ class world(object):
             VAULT 101
             You realize that you are in the Fallout 2 Universe. 
             Congratulations - now go and buy the game if you want to continue
-            """ 
+            """
    
     
     class DoorTile(MapTile):
@@ -261,7 +298,10 @@ class world(object):
                       """
 
               super(world.DoorTile,self).__init__(x,y)
-        
+            
+            def view(self):
+              return door
+            
             def intro_text(self):
                if self.enemy.is_alive():
                  text = self.alive_text  
@@ -276,14 +316,34 @@ class world(object):
             r = random.random()
             if r < 0.80:
                 self.enemy = enemies.GiantAnt()
-                self.alive_text ="A giant %s speeds toward you it's pincers snap at you! "%(self.enemy.name)
-                self.dead_text = "The corpse of the dead %s disolves on the ground. n/You sing,'Dead Ant, Dead Ant, Tad-Da-Da-Da'"%(self.enemy.name)
+                self.alive_text ="""
+                                 A giant ant speeds toward you 
+                                 it's pincers snap at you! """
+                self.dead_text = """
+                                 The corpse of the dead ant 
+                                 disolves on the ground. You sing,
+                                 'Dead Ant, Dead Ant, Tad-Da-Da-Da'"""
             else: 
                 self.enemy = enemies.RadScorpion()
-                self.alive_text = "A giant %s crawls toward you it's stinger lashes at you!"%(self.enemy.name)
-                self.dead_text = " The corpse of the dead %s dissolves on the ground. n/You Exclaim, 'Whisky Tango Foxtrot was that thing?'"%(self.enemy.name)
-
+                self.alive_text = """
+                                 A giant Scorpion crawls toward you 
+                                 it's stinger lashes at you!"""
+                self.dead_text = """
+                                 The corpse of the dead scorpion 
+                                 dissolves on the ground. You Exclaim, 
+                                 'Whisky Tango Foxtrot was that thing?'"""
+            
             super(world.EnemyTile,self).__init__(x, y)
+        
+        def view(self):
+          if self.enemy.is_alive():
+              if self.enemy.name == "Giant Ant":
+                return insideAnt
+              else:
+                return insideScorpion
+          else:
+              return inside
+        
         def intro_text(self):
             if self.enemy.is_alive():
               text = self.alive_text  
@@ -311,6 +371,9 @@ class world(object):
                 
             super(world.EnemyLootTile,self).__init__(x, y)
 
+        def view(self):
+          return inside
+        
         def intro_text(self):
             if self.item_claimed:
                 return "%s body decomposing on the ground" % (self.name)
@@ -328,10 +391,20 @@ class world(object):
     class BossTile(MapTile):
         def __init__(self, x, y):
            self.enemy = enemies.Cameron()
-           self.alive_text = "A man yells at you:/nMy Name is %s!!!'You Shell Not Pass' and lunges at you!" % (self.enemy.name)
-           self.dead_text = "The corpse of %s man dissolves on the ground." %(self.enemy.name)
+           self.alive_text = """
+                      A man yells at you:            
+                      My Name is %s!!!
+                      "You Shell Not Pass" and lunges at you!
+                      """ % (self.enemy.name)
+           self.dead_text = """
+                      The corpse of %s man dissolves on the ground.""" %(self.enemy.name)
 
            super(world.BossTile,self).__init__(x,y)
+        
+        def view(self):
+          return pasteItem(inside,cameron)
+        
+        
         def intro_text(self):
             if self.enemy.is_alive():
               text = self.alive_text  
@@ -351,11 +424,21 @@ class world(object):
            self.enemy = enemies.Centaur()
            self.item_claimed = False
            self.item = gameItems.Book()
-           self.alive_text = "Statue of the Colosus Comes to life 'Only who without hate should pass'"
-           self.dead_text = "You stroll around the statue of Colosus. It reminds you of John Cena for some reason"
+           self.alive_text = """
+                      Statue of the Colosus Comes to life
+                      "Only who without hate should pass"
+                      """
+           self.dead_text = """
+                      You stroll around the statue of Colosus
+                      It reminds you of John Cena for some reason 
+                            """
 
            super(world.SecretTile,self).__init__(x,y)
-       
+
+        def view(self):
+          return pasteItem(inside,centaur)
+        
+        
         def intro_text(self):
             if self.enemy.is_alive():
               text = self.alive_text  
@@ -382,9 +465,14 @@ class world(object):
     
     class TrapTile(MapTile):
         def __init__(self, x, y):
-           self.alive_text = "You notice some strange patterns on the floor, but you barge in anyway"
+           self.alive_text = """
+                             You notice some strange patterns on the floor, but you barge in anyway
+                             """
            super(world.TrapTile,self).__init__(x, y)
-
+        
+        def view(self):
+          player.currentView = inside
+          return inside
     
         def intro_text(self):
             text = self.alive_text
@@ -412,10 +500,16 @@ class world(object):
             else: 
                 self.item = gameItems.pistol223()
             super(world.LootTile,self).__init__(x, y)
-
+        
+        def view(self):
+          player.currentView = inside
+          return inside
+        
         def intro_text(self):
             if self.item_claimed:
-                return "Another unremarkable part of the temple. You must forge onwards."
+                return """
+                Another unremarkable part of the temple. You must forge onwards.
+                """
             else:
                 return "Someone dropped some %s" % (self.item.name)
 
@@ -424,26 +518,79 @@ class world(object):
                 self.item_claimed = True
                 item = self.item
                 player.inventory.append(item)
-                printNow("%s added to your inventory." % (item.name))
+                showInformation("%s added to your inventory." % (item.name))
     
                 
     class PassageTile(MapTile):
+        def view(self):
+          player.currentView = darkRoom
+          return darkRoom
+    
         def intro_text(self):
-            roomDesc = ["You are in a dark, musty temple. The shadows seem to play tricks with your eyes, and you can hear the faint sound of movement.",\
-            "You see a coridor draped in darkness in front of you. What does this darkness hold for you?",\
-            "You see scattered pieces of ceiling on the floor.Watch your steps.",\
-            "You can see a body lying on the floor, you get closer.Name tag reads 'Parzeval'. You find the bloody message close to the corps.BeWare they are working for IOI, they are sixers! Don't trust them!",\
-            "You start seeing strang glowing symbols in the dark. Suddenly you realize what they are saying:Peace of Eden belongs to us!",\
-            "On the walls you can read the big sign:'Save Cheer Leader - Save the World'",\
-            "A crack in the ceiling above the middle of the north wall allows a trickle of water to flow down to the floor.The water pools near the base of the wall, and a rivulet runs along the wall an out into the hall. The water smells fresh.",\
-            "A large, arched niche pierces one wall of this chamber. Filled with rotting wood and rubble the niche appears to be a dumping ground of sorts. Elsewhere in the room, several sections of floor are cracked and pitted.",\
-            "This irregularly-shaped room has an uneven floor. Several small puddles have gathered in the deeper depressions. Elsewhere, small pieces of rubble litter the floor.",\
-            "The arched ceiling of this chamber rises to a height of 20 ft. In the center of the room, but is barely man-high where it meets the walls. The arches holding the ceiling aloft are carved to represent writhing tentacles; a few have been defaced but the upper portions of all remain untouched.",\
-            "A pile of rotting wood, rubbish and other detritus partially obscures one wall of this chamber.Clearly used as a rubbish dump, the stench of decay and rot hangs heavily in the air",\
-            "This large chamber was the scene of an ancient battle. Skeletal remains of at least a dozen humanoids lie scattered about the room where they fell. Several rusting broken spears and shattered, rotting shields lie among the fallen.",\
-            "Part of one wall of this room has collapsed, revealing the natural rock behind the dressed stone wall. The rubble has been moved to create a breastwork across one of the room's exits. Splatters of old, dried blood decorate the top of the breastwork.",\
-            "The remains of a cold camp are evident here. A tattered cloak-the size meant for a gnome or halfling?-along with two empty wineskins and the stripped bones of a chicken and crusts of mouldy bread bear testimony to an explorer's rest.",\
-            "A gaping open pit in one of this chamber's doorways blocks access to the area beyond. Two skeletons, pierced by dozens of tiny stone spikes, lie in the pit.The chamber beyond boasts a stone plinth and altar set in a semi-circular niche. The chamber's other doorway-twice the width of the trapped one appears unprotected."]
+            roomDesc = ["""
+            You are in a dark, musty temple. 
+            The shadows seem to play tricks with your eyes, 
+            and you can hear the faint sound of movement.
+            ""","""
+            You see a coridor draped in darkness in front of you
+            What does this darkness hold for you? 
+            ""","""
+            You see scattered pieces of ceiling on the floor. 
+            Watch your steps.
+            ""","""
+            You can see a body lying on the floor, you get closer. 
+            Name tag reads "Parzeval" 
+            You find the bloody message close to the corps. 
+            BeWare they are working for IOI,  they are sixers!
+            Don't trust them!
+            ""","""
+            You start seeing strang glowing symbols in the dark. 
+            Suddenly you realize what they are saying: 
+            Peace of Eden belongs to us!
+            ""","""
+            On the walls you can read the big sign: 
+            "Save Cheer Leader - Save the World"
+            ""","""
+            A crack in the ceiling above the middle of the north wall 
+            allows a trickle of water to flow down to the floor. 
+            The water pools near the base of the wall, 
+            and a rivulet runs along the wall an out into the hall. 
+            The water smells fresh.
+            ""","""
+            A large, arched niche pierces one wall of this chamber. 
+            Filled with rotting wood and rubble the niche appears 
+            to be a dumping ground of sorts. Elsewhere in the room, 
+            several sections of floor are cracked and pitted.
+            """, """
+            This irregularly-shaped room has an uneven floor. 
+            Several small puddles have gathered in the deeper depressions. 
+            Elsewhere, small pieces of rubble litter the floor.
+            ""","""
+            The arched ceiling of this chamber rises to a height of 20 ft. 
+            In the center of the room, but is barely man-high where it meets the walls.
+            The arches holding the ceiling aloft are carved to represent writhing tentacles;
+            a few have been defaced but the upper portions of all remain untouched.
+            ""","""
+            A pile of rotting wood, rubbish and other detritus partially obscures one wall of this chamber.
+            Clearly used as a rubbish dump, the stench of decay and rot hangs heavily in the air
+            ""","""
+            This large chamber was the scene of an ancient battle. 
+            Skeletal remains of at least a dozen humanoids lie scattered about the room where they fell. 
+            Several rusting broken spears and shattered, rotting shields lie among the fallen.
+            ""","""
+            Part of one wall of this room has collapsed, revealing the natural rock behind the dressed stone wall. 
+            The rubble has been moved to create a breastwork across one of the room's exits. 
+            Splatters of old, dried blood decorate the top of the breastwork.
+            ""","""
+            The remains of a cold camp are evident here. 
+            A tattered cloak-the size meant for a gnome or halfling?-along with two empty wineskins and the stripped bones
+            of a chicken and crusts of mouldy bread bear testimony to an explorer's rest.
+            ""","""
+            A gaping open pit in one of this chamber's doorways blocks access to the area beyond. 
+            Two skeletons, pierced by dozens of tiny stone spikes, lie in the pit. 
+            The chamber beyond boasts a stone plinth and altar set in a semi-circular niche. 
+            The chamber's other doorway-twice the width of the trapped one appears unprotected.
+            """]
         
             #print (self.x, self.y)
             roomDesc= random.choice(roomDesc)
@@ -496,6 +643,9 @@ class world(object):
             inventory2.inventory.append(item)
             printNow("  %s was transfered" % (item.name))
 
+        def view(self):
+          return player.currentView
+        
         def intro_text(self):
             return """
             A sturdy chest tucked in the corner of the room.
@@ -609,6 +759,7 @@ class player:
             self.hp = 100
             self.victory = False
             self.name = "Player One"
+            self.currentView = entrance
 
         def is_alive(self):
             return self.hp > 0
@@ -699,7 +850,7 @@ class player:
                   self.inventory.append(gameItems.pistol223Empty())
             
             if not enemy.is_alive():
-                printNow("You killed %s!"%(enemy.name))
+                showInformation("You killed %s!"%(enemy.name))
                 w.world_map[room.y][room.x]=w.EnemyLootTile(room.x,room.y,enemy.name)
             
             else:
@@ -732,7 +883,7 @@ class player:
 WELCOME = """
 ===================================================================================
 |                               Welcome %s
-|                              Section Six Labs                                  
+                              Section Six Labs                                  
 |                                 Presents                                        
 |                          "Escape from Temple of Terror!"                        
 |             In each room you will be told which directions you can go           
@@ -755,6 +906,7 @@ def playgame(): #changed name to playgame due to conficts with sound play()
     showInformation(WELCOME %(p.name))
     while p.is_alive() and not p.victory:
         room = w.tile_at(p.x, p.y)
+        repaint(room.view())
         showInformation(room.intro_text())
         room.modify_player(p)
         if p.is_alive() and not p.victory:
@@ -772,7 +924,6 @@ def choose_action(w,room, player):
         if action_input is None:
             return
         elif action_input.find("/quit")==0 or action_input.find("/q")==0 or action_input.find("/Q")==0 or action_input.find("quit")==0:
-          play(deathSound)
           action=player.senpokku
         else:
           action = available_actions.get(action_input)
