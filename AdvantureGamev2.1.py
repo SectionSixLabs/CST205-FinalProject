@@ -28,31 +28,6 @@ dirPath = os.path.dirname(__file__)
 #Start Image Import
 Blue = makePicture(dirPath+'/images/blue.jpg')
 #image manipulation function
-def pasteItem(pic1,pic2):
-  backW = getWidth(pic1)
-  backH = getHeight(pic1)
-  w = getWidth(pic2)
-  h = getHeight(pic2)
-  startPixelX = backW/2-w/2
-  startPixelY = backH-h
-  new = makeEmptyPicture(backW,backH)
-  
-  for x in  range(backW):
-    for y in range(backH):
-      p1 = getPixelAt(pic1,x,y)
-      pNew = getPixelAt(new,x,y)
-      if x>startPixelX and x<startPixelX+w and y>startPixelY and y<startPixelY+h: 
-        p2 = getPixelAt(pic2,x-startPixelX,y-startPixelY)
-        r = getRed(p2)
-        g = getGreen(p2)
-        b = getGreen(p2)
-        if (r>5 and g<250 and b>5):
-          setColor(pNew,getColor(p2))
-        else:
-          setColor(pNew,getColor(p1))
-      else:
-        setColor(pNew,getColor(p1))
-  return(new)
 
 #object images
 scorpion = makePicture(dirPath+'/images/radscorpion.png')
@@ -60,63 +35,20 @@ ant = makePicture(dirPath+'/images/giantAnt.png')
 centaur = makePicture(dirPath+'/images/centaur.png')
 chest = makePicture(dirPath+'/images/chest.png')
 cameron = makePicture(dirPath+'/images/cameron.png')
+print("odone")
 #background images
 inside = makePicture(dirPath+'/images/templeInside.jpg')
 darkRoom = makePicture(dirPath+'/images/darkRoom.jpg')
 entrance = makePicture(dirPath+'/images/templeEntrance.jpg')
 door = makePicture(dirPath+'/images/templeDoor.jpg')
+print("bdone")
 #composit images
-insideAnt = pasteItem(inside,ant)
-insideScorpion = pasteItem(inside,scorpion)
-insideCameron = pasteItem(inside,cameron)
-insideCentaur = pasteItem(inside,centaur)
-insideChest = pasteItem(inside,chest)
-
-
-#image manipulation function
-def pasteItem(pic1,pic2):
-  backW = getWidth(pic1)
-  backH = getHeight(pic1)
-  w = getWidth(pic2)
-  h = getHeight(pic2)
-  startPixelX = backW/2-w/2
-  startPixelY = backH-h
-  new = makeEmptyPicture(backW,backH)
-  
-  for x in  range(backW):
-    for y in range(backH):
-      p1 = getPixelAt(pic1,x,y)
-      pNew = getPixelAt(new,x,y)
-      if x>startPixelX and x<startPixelX+w and y>startPixelY and y<startPixelY+h: 
-        p2 = getPixelAt(pic2,x-startPixelX,y-startPixelY)
-        r = getRed(p2)
-        g = getGreen(p2)
-        b = getGreen(p2)
-        if (r>5 and g<250 and b>5):
-          setColor(pNew,getColor(p2))
-        else:
-          setColor(pNew,getColor(p1))
-      else:
-        setColor(pNew,getColor(p1))
-  return(new)
-
-#object images
-scorpion = makePicture(dirPath+'/images/radscorpion.png')
-ant = makePicture(dirPath+'/images/giantAnt.png')
-centaur = makePicture(dirPath+'/images/centaur.png')
-chest = makePicture(dirPath+'/images/chest.png')
-cameron = makePicture(dirPath+'/images/cameron.png')
-#background images
-inside = makePicture(dirPath+'/images/templeInside.jpg')
-darkRoom = makePicture(dirPath+'/images/darkRoom.jpg')
-entrance = makePicture(dirPath+'/images/templeEntrance.jpg')
-door = makePicture(dirPath+'/images/templeDoor.jpg')
-#composit images
-insideAnt = pasteItem(inside,ant)
-insideScorpion = pasteItem(inside,scorpion)
-insideCentaur = pasteItem(inside,centaur)
-insideCameron = pasteItem(inside,cameron)
-
+insideAnt = makePicture(dirPath+'/images/insideAnt.jpg')
+insideScorpion = makePicture(dirPath+'/images/insideScorpion.jpg')
+insideCameron = makePicture(dirPath+'/images/insideCameron.jpg')
+insideCentaur = makePicture(dirPath+'/images/insideCentaur.jpg')
+insideChest = makePicture(dirPath+'/images/insideChest.jpg')
+print("cdone")
 
 
 #Start Sound Import

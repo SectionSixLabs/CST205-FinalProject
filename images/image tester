@@ -19,7 +19,8 @@ def pasteItem(pic1,pic2):
       if (r>5 and g<250 and b>5):
         p1 = getPixelAt(pic1,startPixelX+x,startPixelY+y)
         setColor(p1,makeColor(r,g,b))
-  explore(pic1)
+  show(pic1)
+  writePictureTo(pic1, dirPath+'/inside1.jpg')
 
 scorpion = makePicture(dirPath+'/radscorpion.png')
 ant = makePicture(dirPath+'/giantAnt.png')
@@ -33,4 +34,4 @@ entrance = makePicture(dirPath+'/templeEntrance.jpg')
 door = makePicture(dirPath+'/templeDoor.jpg')
 
 #explore(cameron)
-pasteItem(inside,centaur)
+pasteItem(inside,cameron)
