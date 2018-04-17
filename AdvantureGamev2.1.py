@@ -48,6 +48,7 @@ insideScorpion = makePicture(dirPath+'/images/insideScorpion.jpg')
 insideCameron = makePicture(dirPath+'/images/insideCameron.jpg')
 insideCentaur = makePicture(dirPath+'/images/insideCentaur.jpg')
 insideChest = makePicture(dirPath+'/images/insideChest.jpg')
+jumpsuit = makePicture(dirPath+'/images/jumpsuit.jpg') #wasn't initialized, so i did it here
 print("cdone")
 
 
